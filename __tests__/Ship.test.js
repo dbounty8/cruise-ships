@@ -24,6 +24,7 @@ it('has set sail', () => {
   const ship = new Ship(itinerary);
   ship.setSail();
   expect(ship.startingPort).toBeFalsy();
+  expect(port.ships).not.toContain(ship);
 });
 
 describe('Port', () => {
@@ -44,8 +45,20 @@ it('port has ships', () => {
 
 it('port can add ships', () => {
   const port = new Port('Dover');
-  port.addShip('Rob');
-  expect(port.ships).toContain('Rob');
+  const itinerary = new Itinerary([port]);
+  const robShip = new Ship(itinerary);
+
+  port.addShip(robShip);
+  expect(port.ships).toContain(robShip);
+});
+
+it('port can remove ships', () => {
+  const port = new Port('Dover');
+  const itinerary = new Itinerary([port]);
+  const robShip = new Ship(itinerary);
+  port.addShip(robShip);
+  port.removeShip(robShip);
+  expect(port.ships).not.toContain(robShip);
 });
 
 it('is docked at a port', () => {
@@ -56,6 +69,14 @@ it('is docked at a port', () => {
   const calais = new Port('Calais');
   ship.dock(calais);
   expect(ship.currentPort).toBe(calais);
+});
+
+it('gets added to port on instantiation', () => {
+  const port = new Port('Dover');
+  const itinerary = new Itinerary([port]);
+  const ship = new Ship(itinerary);
+
+  expect(ship.currentPort.ships).toContain(ship);
 });
 
 it('Creates an itinerary object', () => {
@@ -69,5 +90,3 @@ it('checks whether an itinerary has a ports property', () => {
   const itinerary = new Itinerary([dover, calais]);
   expect(itinerary.ports).toEqual([dover, calais]);
 });
-
-

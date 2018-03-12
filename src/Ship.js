@@ -1,7 +1,10 @@
 function Ship(itinerary) {
-  this.startingPort = itinerary.ports[0];
-  this.currentPort = itinerary.ports[0];
+  const startPort = itinerary.ports[0];
+  this.startingPort = startPort;
+  const thisPort = itinerary.ports[0];
+  this.currentPort = thisPort;
   this.itinerary = itinerary;
+  this.currentPort.addShip(this);
 }
 
 function Port(portName) {
@@ -14,19 +17,22 @@ function Itinerary(ports) {
 }
 
 Ship.prototype = {
-  setSail: function(){
+  setSail: function setSail() {
     this.startingPort = false;
+    this.currentPort.removeShip(this);
   },
-  dock: function(currentPort){
+  dock: function dock(currentPort) {
     this.currentPort = currentPort;
-  }
-}
+  },
+};
 
 Port.prototype = {
-  addShip: function(ship) {
+  addShip: function addShip(ship) {
     this.ships.push(ship);
-  }
-}
-
+  },
+  removeShip: function removeShip(ship) {
+    this.ships.splice(ship);
+  },
+};
 
 module.exports = { Ship, Port, Itinerary };
